@@ -1,96 +1,157 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using comp231_002__Team1_TeamUp_SportsBooking.Data;
-using comp231_002__Team1_TeamUp_SportsBooking.Models;
-using comp231_002__Team1_TeamUp_SportsBooking.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using comp231_002__Team1_TeamUp_SportsBooking.Data;
+using comp231_002__Team1_TeamUp_SportsBooking.Models;
 
 namespace comp231_002__Team1_TeamUp_SportsBooking.Controllers
 {
     public class CourtsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly NotificationService _notificationService;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CourtsController(
-            ApplicationDbContext context,
-            NotificationService notificationService,
-            UserManager<ApplicationUser> userManager)
+        public CourtsController(ApplicationDbContext context)
         {
             _context = context;
-            _notificationService = notificationService;
-            _userManager = userManager;
         }
 
-        // GET: /Courts
+        // GET: Courts
+        // Страница со списком кортов (используется в navbar)
         public async Task<IActionResult> Index()
         {
-            var courts = await _context.Courts.ToListAsync();
+            var courts = await _context.Courts
+                .OrderBy(c => c.Location)
+                .ToListAsync();
+
             return View(courts);
         }
 
-        // GET: /Courts/Book/5
-        [HttpGet]
-        public async Task<IActionResult> Book(int id)
+        // GET: Courts/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
+            if (id == null)
+                return NotFound();
+
+            var court = await _context.Courts
+                .FirstOrDefaultAsync(m => m.CourtID == id);
+
+            if (court == null)
+                return NotFound();
+
+            return View(court);
+        }
+
+        // GET: Courts/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Courts/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("CourtID,Location,SurfaceType,IsAvailable")] Court court)
+        {
+            if (!ModelState.IsValid)
+                return View(court);
+
+            _context.Courts.Add(court);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Courts/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var court = await _context.Courts.FindAsync(id);
+            if (court == null)
+                return NotFound();
+
+            return View(court);
+        }
+
+        // POST: Courts/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("CourtID,Location,SurfaceType,IsAvailable")] Court court)
+        {
+            if (id != court.CourtID)
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return View(court);
+
+            try
+            {
+                _context.Update(court);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CourtExists(court.CourtID))
+                    return NotFound();
+
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Courts/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var court = await _context.Courts
+                .FirstOrDefaultAsync(m => m.CourtID == id);
+
+            if (court == null)
+                return NotFound();
+
+            return View(court);
+        }
+
+        // POST: Courts/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var court = await _context.Courts.FindAsync(id);
+            if (court != null)
+            {
+                _context.Courts.Remove(court);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Дополнительное действие под кнопку "Book this court" (будет удобно бэкенду)
+        // GET: Courts/Book/5
+        public async Task<IActionResult> Book(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
             var court = await _context.Courts
                 .FirstOrDefaultAsync(c => c.CourtID == id);
 
-            if (court == null) return NotFound();
+            if (court == null)
+                return NotFound();
 
-            ViewBag.CourtId = court.CourtID;
-            ViewBag.CourtName = court.Location;
-
-            var booking = new Booking
-            {
-                CourtID = court.CourtID,
-                BookingDate = DateTime.Today
-            };
-
-            return View(booking);
+            // Сейчас просто показываем форму/подтверждение.
+            // Бэкенд потом добавит сюда реальную логику бронирования.
+            return View(court);
         }
 
-        // POST: /Courts/Book
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Book(Booking booking)
+        private bool CourtExists(int id)
         {
-            var court = await _context.Courts
-                .FirstOrDefaultAsync(c => c.CourtID == booking.CourtID);
-
-            if (court == null) return NotFound();
-
-            if (!ModelState.IsValid)
-            {
-                ViewBag.CourtId = booking.CourtID;
-                ViewBag.CourtName = court.Location;
-                return View(booking);
-            }
-
-            // TEMP: PlayerID = 1 because Player identity not wired
-            booking.PlayerID = 1;
-
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
-
-            // ⭐ ALWAYS create a notification (logged in OR not logged in)
-            string userId = User.Identity.IsAuthenticated
-                ? _userManager.GetUserId(User)
-                : "system"; // saves even when not logged in
-
-            await _notificationService.CreateNotificationAsync(
-                userId,
-                $"You booked Court #{booking.CourtID} on {booking.BookingDate:MMM dd yyyy} at {booking.TimeSlot}."
-            );
-
-            TempData["SuccessMessage"] = "Your booking has been created successfully!";
-
-            return RedirectToAction("Index");
+            return _context.Courts.Any(e => e.CourtID == id);
         }
-
     }
 }

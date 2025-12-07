@@ -1,0 +1,41 @@
+@using comp231_002__Team1_TeamUp_SportsBooking.Models
+@model IEnumerable<Game>
+
+@{
+    ViewData["Title"] = "My Games";
+}
+
+<h1>My games</h1>
+
+@if (Model == null || !Model.Any())
+{
+    <p>You don’t have any games yet.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var game in Model)
+        {
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Game @game.GameID
+                        </h5>
+                        <p class="card-text">
+                            <strong>Court:</strong> @game.CourtID <br />
+                            <strong>Date:</strong> @game.GameDate.ToShortDateString() <br />
+                            <strong>Status:</strong> @game.Status
+                        </p>
+
+                        <a asp-action="Details"
+                           asp-route-id="@game.GameID"
+                           class="btn btn-outline-primary btn-sm">
+                            Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

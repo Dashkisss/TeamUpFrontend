@@ -1,0 +1,29 @@
+@using comp231_002__Team1_TeamUp_SportsBooking.Models
+@model Court
+
+@{
+    ViewData["Title"] = "Court details";
+}
+
+<h1>Court details</h1>
+
+<dl class="row">
+    <dt class="col-sm-2">Location</dt>
+    <dd class="col-sm-10">@Model.Location</dd>
+
+    <dt class="col-sm-2">Surface</dt>
+    <dd class="col-sm-10">@Model.SurfaceType</dd>
+
+    <dt class="col-sm-2">Status</dt>
+    <dd class="col-sm-10">@((Model.IsAvailable) ? "Available" : "Unavailable")</dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-secondary">Back to list</a>
+@if (Model.IsAvailable)
+{
+    <a asp-action="Book"
+       asp-route-id="@Model.CourtID"
+       class="btn btn-primary ms-2">
+        Book this court
+    </a>
+}
