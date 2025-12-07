@@ -1,0 +1,94 @@
+@using comp231_002__Team1_TeamUp_SportsBooking.Models
+@model IEnumerable<Court>
+
+@{
+    ViewData["Title"] = "Courts";
+}
+
+<main class="main-container courts-page">
+
+    <!-- Header -->
+    <section class="courts-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div class="mb-3 mb-md-0">
+            <h1 class="dashboard-title mb-2">Find a court</h1>
+            <p class="auth-subtitle mb-0">
+                Browse available courts and book a time slot that fits your schedule.
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 justify-content-end">
+            <a asp-controller="Courts"
+               asp-action="Book"
+               asp-route-id="1"
+               class="btn-primary-teamup">
+                Quick book
+            </a>
+
+            <a asp-controller="Courts"
+               asp-action="Index"
+               class="btn-secondary-teamup">
+                Reset filters
+            </a>
+        </div>
+    </section>
+
+    <!-- Courts list -->
+    @if (Model == null || !Model.Any())
+    {
+        <section class="empty-state text-center py-5">
+            <p class="mb-3">No courts available.</p>
+            <p class="text-muted mb-4">Add courts to the database to display them here.</p>
+        </section>
+    }
+    else
+    {
+        <section class="courts-grid">
+            <div class="row g-4">
+
+                @foreach (var court in Model)
+                {
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <article class="court-card h-100 d-flex flex-column">
+
+                            <div class="court-card-body flex-grow-1">
+                                <h3 class="court-name mb-2">@court.Location</h3>
+
+                                <p class="mb-1">
+                                    Surface: <strong>@court.SurfaceType</strong>
+                                </p>
+
+                                <p class="mb-0">
+                                    Status:
+                                    @if (court.IsAvailable)
+                                    {
+                                        <span class="badge bg-success">Available</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Unavailable</span>
+                                    }
+                                </p>
+                            </div>
+
+                            <div class="mt-3 d-flex justify-content-between align-items-center">
+                                <a asp-controller="Courts"
+                                   asp-action="Book"
+                                   asp-route-id="@court.CourtID"
+                                   class="btn-primary-teamup @(court.IsAvailable ? "" : "disabled")">
+                                    Book this court
+                                </a>
+
+                                <span class="badge bg-secondary">
+                                    Court #@court.CourtID
+                                </span>
+                            </div>
+
+                        </article>
+                    </div>
+                }
+
+            </div>
+        </section>
+    }
+
+</main>

@@ -1,0 +1,17 @@
+﻿@model List<comp231_002__Team1_TeamUp_SportsBooking.Models.Notification>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="p-2 text-center text-muted">No notifications</div>
+}
+else
+{
+    foreach (var n in Model)
+    {
+        <div class="dropdown-item">
+            <div>@n.Message</div>
+            <small class="text-muted">@n.CreatedAt.ToString("MMM dd, h:mm tt")</small>
+        </div>
+        <div class="dropdown-divider"></div>
+    }
+}

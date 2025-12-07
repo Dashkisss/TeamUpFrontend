@@ -1,0 +1,36 @@
+﻿@model List<comp231_002__Team1_TeamUp_SportsBooking.Models.Notification>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<h2 class="mt-4 mb-3">Notifications</h2>
+
+<a class="btn btn-primary mb-3" href="/Notification/MarkAllAsRead">Mark All as Read</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var n in Model)
+        {
+            <tr class="@(n.IsRead ? "" : "table-warning")">
+                <td>@n.Message</td>
+                <td>@n.CreatedAt.ToString("MMM dd, yyyy hh:mm tt")</td>
+                <td>@(n.IsRead ? "Read" : "Unread")</td>
+                <td>
+                    @if (!n.IsRead)
+                    {
+                        <a class="btn btn-sm btn-success" href="/Notification/MarkAsRead/@n.NotificationId">Mark as Read</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

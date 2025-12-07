@@ -1,0 +1,115 @@
+@model comp231_002__Team1_TeamUp_SportsBooking.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<section class="auth-page">
+    <div class="auth-card auth-card-grid">
+
+        <!-- LEFT: registration form-->
+        <div class="auth-card-left">
+            <h1 class="h3 fw-semibold mb-3">
+                Create your TeamUp account 🏃‍♀️
+            </h1>
+
+            <p class="text-soft mb-4">
+                One account to book courts, join games, and manage your teams.
+            </p>
+
+            <!-- ⭐⭐⭐ FIXED: only ONE FORM, NO NESTING ⭐⭐⭐ -->
+            <form asp-controller="Account" asp-action="Register" method="post" class="mt-3">
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">First name</label>
+                        <input asp-for="FirstName" class="form-control" placeholder="Daria" />
+                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Last name</label>
+                        <input asp-for="LastName" class="form-control" placeholder="Ivanova" />
+                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mt-3 mb-3">
+                    <label class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="you@example.com" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Password</label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Confirm</label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="••••••••" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mt-3 mb-3">
+                    <label class="form-label">Role</label>
+                    <select asp-for="Role" class="form-select">
+                        <option value="">Select your role</option>
+                        <option value="Player">Player</option>
+                        <option value="TeamOwner">Team Owner</option>
+                        <option value="Audience">Audience</option>
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger small"></span>
+
+                    <div class="small text-soft mt-1">
+                        You can change this later in settings.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary-teamup w-100 mt-2">
+                    Create account
+                </button>
+
+            </form>
+            <!-- END FORM -->
+
+            <p class="mt-4 small text-soft">
+                Already have an account?
+                <a asp-controller="Account" asp-action="Login">Sign in</a>
+            </p>
+        </div>
+
+        <!-- RIGHT: Nice explanation -->
+        <div class="auth-card-right">
+            <h2 class="h5 fw-semibold mb-3">Why TeamUp?</h2>
+
+            <div class="d-flex flex-column gap-3 small">
+                <div class="card-teamup">
+                    <div class="card-teamup-header">
+                        <div class="card-teamup-title">All your games in one place</div>
+                    </div>
+                    <p class="text-soft mb-0">
+                        No more lost messages in group chats. See upcoming matches,
+                        courts, and teammates in one schedule.
+                    </p>
+                </div>
+
+                <div class="card-teamup">
+                    <div class="card-teamup-header">
+                        <div class="card-teamup-title">Smarter court booking</div>
+                    </div>
+                    <p class="text-soft mb-0">
+                        Find available courts, compare times, and book instantly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <!-- client-side validation -->
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,24 @@
+@using System.Linq
+@using comp231_002__Team1_TeamUp_SportsBooking.Models
+@model IEnumerable<Notification>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="p-2 text-center text-muted small">
+        No notifications
+    </div>
+}
+else
+{
+    <ul class="list-group list-group-flush">
+        @foreach (var n in Model)
+        {
+            <li class="list-group-item small @(n.IsRead ? "text-muted" : "fw-semibold")">
+                <div>@n.Message</div>
+                <div class="text-muted" style="font-size: 0.75rem;">
+                    @n.CreatedAt.ToString("MMM dd · HH:mm")
+                </div>
+            </li>
+        }
+    </ul>
+}
