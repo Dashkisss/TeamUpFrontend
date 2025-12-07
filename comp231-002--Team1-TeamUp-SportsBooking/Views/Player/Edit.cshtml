@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Edit profile";
+}
+
+<main class="main-container">
+
+    <section class="card-teamup p-4">
+
+        <div class="card-teamup-header mb-3">
+            <div>
+                <div class="card-teamup-title">Edit profile</div>
+                <div class="card-teamup-meta">
+                    Update your name, handle, bio and playing preferences.
+                    Backend team will attach real user data later.
+                </div>
+            </div>
+        </div>
+
+        <form>
+
+            <div class="mb-3">
+                <label class="form-label">Display name</label>
+                <input class="form-control" placeholder="Daria Ivanova" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Handle</label>
+                <input class="form-control" placeholder="daria_plays" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Bio</label>
+                <textarea rows="3"
+                          class="form-control"
+                          placeholder="Plays evenings after 6 PM, prefers semi-competitive games."></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Sports</label>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="chip chip-active">Tennis</span>
+                    <span class="chip">Basketball</span>
+                    <span class="chip">Badminton</span>
+                </div>
+                <small class="text-muted">
+                    UI placeholder — backend will load real sports later.
+                </small>
+            </div>
+
+            <button type="button" class="btn-primary-teamup w-100 mt-3">
+                Save changes (UI only)
+            </button>
+
+            <a asp-controller="Player"
+               asp-action="Index"
+               class="btn-secondary-teamup w-100 mt-2">
+                Back to profile
+            </a>
+
+        </form>
+
+    </section>
+
+</main>

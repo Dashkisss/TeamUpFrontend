@@ -9,51 +9,66 @@
 
         <div class="profile-header">
 
-    <!-- Avatar -->
-    <div class="profile-avatar">
-        <span class="profile-avatar-initials">DA</span>
-    </div>
-
-    <!-- Name + bio -->
-    <div class="profile-main">
-        <div class="profile-row-top">
-            <div class="profile-title-block">
-                <h1 class="profile-name mb-0">Daria Ivanova</h1>
-                <span class="profile-handle">daria_plays</span>
+            <!-- Avatar -->
+            <div class="profile-avatar">
+                <span class="profile-avatar-initials">DA</span>
             </div>
-        </div>
 
-        <div class="profile-sports-row">
-            <span class="chip chip-active">Tennis</span>
-            <span class="chip">Basketball</span>
-            <span class="chip">Badminton</span>
-        </div>
+            <!-- Name + bio -->
+            <div class="profile-main">
+                <div class="profile-row-top">
+                    <div class="profile-title-block">
+                        <h1 class="profile-name mb-0">Daria Ivanova</h1>
+                        <span class="profile-handle">daria_plays</span>
+                    </div>
+                </div>
 
-        <p class="profile-bio">
-            Plays evenings after 6 PM, prefers semi-competitive games and mixed doubles.
-            Loves trying new courts across the city.
-        </p>
+                <div class="profile-sports-row">
+                    <span class="chip chip-active">Tennis</span>
+                    <span class="chip">Basketball</span>
+                    <span class="chip">Badminton</span>
+                </div>
 
-        <div class="profile-meta small">
-            <span>Joined · 2024</span>
-            <span>Home area · North Toronto</span>
-        </div>
-    </div>
+                <p class="profile-bio">
+                    Plays evenings after 6 PM, prefers semi-competitive games and mixed doubles.
+                    Loves trying new courts across the city.
+                </p>
 
-    <!-- Actions -->
-    <div class="profile-actions">
-        <button class="btn-primary-teamup profile-action-btn">
-            Edit profile
-        </button>
-        <button class="btn-secondary-teamup profile-action-btn">
-            Manage notifications
-        </button>
-        <button class="btn-secondary-teamup profile-action-btn">
+                <div class="profile-meta small">
+                    <span>Joined · 2024</span>
+                    <span>Home area · North Toronto</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="profile-actions">
+    <!-- Edit profile -->
+    <a asp-controller="Player"
+       asp-action="Edit"
+       class="btn-primary-teamup profile-action-btn">
+        Edit profile
+    </a>
+
+    <!-- Manage notifications -->
+    <a asp-controller="Notification"
+       asp-action="Index"
+       class="btn-secondary-teamup profile-action-btn">
+        Manage notifications
+    </a>
+
+    <!-- Logout -->
+    <form asp-controller="Account"
+          asp-action="Logout"
+          method="post"
+          class="d-inline">
+        <button type="submit"
+                class="btn-secondary-teamup profile-action-btn">
             Sign out
         </button>
-    </div>
+    </form>
 </div>
 
+        </div>
 
         <!-- Stats row -->
         <div class="profile-stats mt-3">
@@ -121,7 +136,7 @@
         </div>
 
         <!-- RIGHT: Notification settings -->
-        <aside class="dashboard-side">
+        <aside class="dashboard-side" id="notification-settings">
             <div class="card-teamup">
                 <div class="card-teamup-header">
                     <div class="card-teamup-title">Notifications</div>
@@ -160,7 +175,7 @@
 
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div>Marketing & updates</div>
+                            <div>Marketing &amp; updates</div>
                             <div class="text-soft">
                                 Product updates, offers, and experiments.
                             </div>
@@ -170,8 +185,8 @@
                 </div>
 
                 <p class="small text-soft mt-3 mb-0">
-                    Later, the backend will be able to read/change these settings from the table.
-                    notifications. Right now it's just a UI framework.
+                    Later, the backend will be able to read/change these settings
+                    from the notifications table. Right now it's just a UI framework.
                 </p>
             </div>
         </aside>

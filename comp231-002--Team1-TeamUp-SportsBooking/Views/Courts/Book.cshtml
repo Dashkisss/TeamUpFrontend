@@ -1,19 +1,64 @@
-@using comp231_002__Team1_TeamUp_SportsBooking.Models
-@model Court
+@model comp231_002__Team1_TeamUp_SportsBooking.Models.Booking
 
 @{
-    ViewData["Title"] = "Book court";
+    ViewData["Title"] = "Book a court";
+
+    var courtName = ViewBag.CourtName as string ?? $"Court #{Model.CourtID}";
 }
 
-<h1>Book this court</h1>
+<main class="main-container">
 
-<p>You are about to book:</p>
+    <section class="auth-card booking-card">
 
-<ul>
-    <li><strong>Location:</strong> @Model.Location</li>
-    <li><strong>Surface:</strong> @Model.SurfaceType</li>
-</ul>
+        <h1 class="auth-title mb-3">Book a court</h1>
+        <p class="auth-subtitle mb-4">
+            Choose a date and time slot for your reservation.
+        </p>
 
-<p>This is a placeholder view. Backend will add booking logic here (date, time slot, player, etc.).</p>
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
 
-<a asp-action="Index" class="btn btn-secondary">Back to courts</a>
+        <div class="mb-3">
+            <div class="small text-soft">Court</div>
+            <div class="h5 mb-0">
+                @courtName (@Model.CourtID)
+            </div>
+        </div>
+
+        <form asp-action="Book" method="post">
+
+            @* CourtID передаём скрыто *@
+            <input type="hidden" asp-for="CourtID" />
+
+            <!-- Booking date -->
+            <div class="form-group mb-3">
+                <label asp-for="BookingDate" class="form-label"></label>
+                <input asp-for="BookingDate" type="date" class="form-control" />
+                <span asp-validation-for="BookingDate" class="text-danger"></span>
+            </div>
+
+            <!-- Time slot -->
+            <div class="form-group mb-4">
+                <label asp-for="TimeSlot" class="form-label"></label>
+                <input asp-for="TimeSlot" class="form-control" placeholder="e.g. 18:00 – 19:00" />
+                <span asp-validation-for="TimeSlot" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-primary-teamup w-100">
+                Confirm booking
+            </button>
+
+        </form>
+    </section>
+
+</main>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
