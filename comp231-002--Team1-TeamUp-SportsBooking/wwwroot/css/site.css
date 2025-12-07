@@ -1276,3 +1276,212 @@ main {
         color: var(--teamup-text-soft) !important;
         font-size: 0.75rem;
     }
+
+    /* === TeamUp layout tweaks === */
+
+body {
+    background-color: #000000;
+    color: #f8f9fa;
+}
+
+/* Заголовок страницы */
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.page-badge {
+    display: inline-block;
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: #10291b;
+    color: #7df08f;
+}
+
+.page-title {
+    margin-top: 0.6rem;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.page-subtitle {
+    color: #9ca3af;
+    max-width: 520px;
+}
+
+/* Сетка кортов */
+.court-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Карточка корта */
+.court-card {
+    background: #0f1014;
+    border-radius: 18px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #1f2933;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.court-card:hover {
+    transform: translateY(-3px);
+    border-color: #22c55e;
+    box-shadow: 0 24px 55px rgba(9, 255, 120, 0.2);
+}
+
+.court-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.court-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.court-meta {
+    font-size: 0.85rem;
+}
+
+.court-price {
+    font-weight: 500;
+    color: #7df08f;
+}
+
+/* Кнопки на карточке */
+.court-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-end;
+}
+
+.court-card-actions .btn {
+    min-width: 130px;
+}
+
+/* Пустое состояние */
+.empty-state {
+    background: #0f1014;
+    border-radius: 18px;
+}
+/* === MY GAMES PAGE === */
+
+.games-section {
+    margin-bottom: 2rem;
+}
+
+.games-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.games-section-count {
+    font-size: 0.85rem;
+}
+
+/* Сетка карточек игр */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+}
+
+/* Карточка игры */
+.game-card {
+    background: #0f1014;
+    border-radius: 18px;
+    padding: 1.1rem 1.3rem;
+    border: 1px solid #1f2933;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-3px);
+    border-color: #22c55e;
+    box-shadow: 0 24px 55px rgba(9, 255, 120, 0.2);
+}
+
+.game-card--past {
+    opacity: 0.8;
+}
+
+/* Верх карточки */
+.game-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.game-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.game-meta {
+    font-size: 0.8rem;
+}
+
+/* Дата */
+.game-date {
+    font-size: 0.9rem;
+}
+
+/* Низ карточки */
+.game-card-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Бейджи статуса */
+.game-status-badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid transparent;
+}
+
+.game-status-upcoming {
+    background-color: #10291b;
+    color: #7df08f;
+    border-color: #1b9448;
+}
+
+.game-status-completed {
+    background-color: #111827;
+    color: #9ca3af;
+    border-color: #4b5563;
+}
+
+.game-status-cancelled {
+    background-color: #2b1111;
+    color: #fecaca;
+    border-color: #f87171;
+}
+
+.game-status-pending {
+    background-color: #1f2937;
+    color: #e5e7eb;
+    border-color: #9ca3af;
+}
+
+.game-status-default {
+    background-color: #111827;
+    color: #d1d5db;
+    border-color: #4b5563;
+}

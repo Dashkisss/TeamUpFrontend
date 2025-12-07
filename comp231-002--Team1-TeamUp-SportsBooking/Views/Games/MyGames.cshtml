@@ -3,39 +3,182 @@
 
 @{
     ViewData["Title"] = "My Games";
+
+    var now = DateTime.Now;
+    var upcoming = Model?
+        .Where(g => g.GameDate >= now)
+        .OrderBy(g => g.GameDate)
+        .ToList() ?? new List<Game>();
+
+    var past = Model?
+        .Where(g => g.GameDate < now)
+        .OrderByDescending(g => g.GameDate)
+        .ToList() ?? new List<Game>();
 }
 
-<h1>My games</h1>
+<div class="page-header mb-4">
+    <span class="page-badge">My games</span>
+    <h1 class="page-title">Your games in one place.</h1>
+    <p class="page-subtitle">
+        See your upcoming matches and past games without digging through emails or chats.
+    </p>
+</div>
 
 @if (Model == null || !Model.Any())
 {
-    <p>You don’t have any games yet.</p>
+    <div class="empty-state card bg-dark text-light border-0 p-4">
+        <h5 class="mb-2">You don’t have any games yet.</h5>
+        <p class="mb-0 text-muted">
+            Once you book a court or join a team game, it will appear here.
+        </p>
+    </div>
 }
 else
 {
-    <div class="row">
-        @foreach (var game in Model)
-        {
-            <div class="col-md-6 mb-3">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Game @game.GameID
-                        </h5>
-                        <p class="card-text">
-                            <strong>Court:</strong> @game.CourtID <br />
-                            <strong>Date:</strong> @game.GameDate.ToShortDateString() <br />
-                            <strong>Status:</strong> @game.Status
-                        </p>
+    <!-- UPCOMING GAMES -->
+    <section class="games-section mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="games-section-title">Upcoming games</h2>
+            <span class="games-section-count text-muted">
+                @upcoming.Count game@(upcoming.Count == 1 ? "" : "s")
+            </span>
+        </div>
 
-                        <a asp-action="Details"
-                           asp-route-id="@game.GameID"
-                           class="btn btn-outline-primary btn-sm">
-                            Details
-                        </a>
-                    </div>
-                </div>
+        @if (!upcoming.Any())
+        {
+            <p class="text-muted small mb-0">No upcoming games yet.</p>
+        }
+        else
+        {
+            <div class="games-grid">
+                @foreach (var game in upcoming)
+                {
+                    <article class="game-card">
+                        <div class="game-card-header">
+                            <div>
+                                <h3 class="game-title mb-1">
+                                    Game @game.GameID
+                                </h3>
+                                <p class="game-meta mb-0 text-muted">
+                                    Court #@game.CourtID
+                                    @if (game.TeamId != 0)
+                                    {
+                                        <span class="mx-1">•</span>
+                                        <span>Team @game.TeamId</span>
+                                    }
+                                </p>
+                            </div>
+
+                            <span class="game-status-badge @GetStatusClass(game.Status)">
+                                @game.Status
+                            </span>
+                        </div>
+
+                        <div class="game-card-body">
+                            <p class="mb-1 game-date">
+                                @game.GameDate.ToString("ddd, MMM d • HH:mm")
+                            </p>
+                            <p class="mb-0 text-muted small">
+                                This is an upcoming match. Later backend can add join / cancel actions here.
+                            </p>
+                        </div>
+
+                        <div class="game-card-footer">
+                            <a asp-controller="Games"
+                               asp-action="Details"
+                               asp-route-id="@game.GameID"
+                               class="btn btn-outline-light btn-sm">
+                                Details
+                            </a>
+                        </div>
+                    </article>
+                }
             </div>
         }
-    </div>
+    </section>
+
+    <!-- PAST GAMES -->
+    <section class="games-section">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="games-section-title">Past games</h2>
+            <span class="games-section-count text-muted">
+                @past.Count game@(past.Count == 1 ? "" : "s")
+            </span>
+        </div>
+
+        @if (!past.Any())
+        {
+            <p class="text-muted small mb-0">No past games yet.</p>
+        }
+        else
+        {
+            <div class="games-grid">
+                @foreach (var game in past)
+                {
+                    <article class="game-card game-card--past">
+                        <div class="game-card-header">
+                            <div>
+                                <h3 class="game-title mb-1">
+                                    Game @game.GameID
+                                </h3>
+                                <p class="game-meta mb-0 text-muted">
+                                    Court #@game.CourtID
+                                    @if (game.TeamId != 0)
+                                    {
+                                        <span class="mx-1">•</span>
+                                        <span>Team @game.TeamId</span>
+                                    }
+                                </p>
+                            </div>
+
+                            <span class="game-status-badge @GetStatusClass(game.Status)">
+                                @game.Status
+                            </span>
+                        </div>
+
+                        <div class="game-card-body">
+                            <p class="mb-1 game-date">
+                                @game.GameDate.ToString("ddd, MMM d • HH:mm")
+                            </p>
+                            <p class="mb-0 text-muted small">
+                                Past game. Later backend can attach stats or results here.
+                            </p>
+                        </div>
+
+                        <div class="game-card-footer">
+                            <a asp-controller="Games"
+                               asp-action="Details"
+                               asp-route-id="@game.GameID"
+                               class="btn btn-outline-light btn-sm">
+                                Details
+                            </a>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+}
+
+@functions {
+    // Небольшой helper для цвета статуса
+    private string GetStatusClass(string status)
+    {
+        if (string.IsNullOrWhiteSpace(status))
+            return "game-status-default";
+
+        status = status.ToLowerInvariant();
+
+        if (status.Contains("cancel"))
+            return "game-status-cancelled";
+
+        if (status.Contains("complete") || status.Contains("finished"))
+            return "game-status-completed";
+
+        if (status.Contains("pending"))
+            return "game-status-pending";
+
+        // например "Scheduled", "Confirmed" и т.п.
+        return "game-status-upcoming";
+    }
 }

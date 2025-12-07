@@ -1,51 +1,80 @@
-@using comp231_002__Team1_TeamUp_SportsBooking.Models
-@model IEnumerable<Court>
+@model IEnumerable<comp231_002__Team1_TeamUp_SportsBooking.Models.Court>
 
 @{
-    ViewData["Title"] = "Courts";
+    ViewData["Title"] = "Find a court";
 }
 
-<h1 class="mb-3">Find a court</h1>
+<div class="page-header mb-4">
+    <span class="page-badge">Find a court</span>
+    <h1 class="page-title">Evening games, all in one place.</h1>
+    <p class="page-subtitle">
+        Pick a court that matches your usual location, surface, and availability.
+    </p>
+</div>
 
 @if (Model == null || !Model.Any())
 {
-    <p>No courts available yet.</p>
-    <p>Ask admin to add courts to the system.</p>
+    <div class="empty-state card bg-dark text-light border-0 p-4">
+        <h5 class="mb-2">No courts available yet</h5>
+        <p class="mb-0 text-muted">
+            Ask the admin or team owner to add some courts to the system.
+        </p>
+    </div>
 }
 else
 {
-    <div class="row">
+    <div class="court-grid">
         @foreach (var court in Model)
         {
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">@court.Location</h5>
-                        <p class="card-text mb-2">
-                            Surface: @court.SurfaceType <br />
-                            Status: @(court.IsAvailable ? "Available" : "Unavailable")
+            var title = !string.IsNullOrWhiteSpace(court.Location)
+                ? court.Location
+                : $"Court #{court.CourtID}";
+
+            <div class="court-card">
+                <div class="court-card-body">
+                    <div class="court-card-main">
+                        <h2 class="court-name">@title</h2>
+
+                        <p class="court-meta mb-1">
+                            <span class="court-price">
+                                @(!string.IsNullOrWhiteSpace(court.SurfaceType)
+                                    ? court.SurfaceType
+                                    : "Surface type: not specified")
+                            </span>
                         </p>
 
-                        <div class="mt-auto">
-                            <a asp-action="Details"
-                               asp-route-id="@court.CourtID"
-                               class="btn btn-outline-secondary btn-sm me-2">
-                                Details
-                            </a>
-
+                        <p class="court-meta text-muted mb-0">
+                            Status:
                             @if (court.IsAvailable)
                             {
-                                <a asp-action="Book"
-                                   asp-route-id="@court.CourtID"
-                                   class="btn btn-primary btn-sm">
-                                    Book this court
-                                </a>
+                                <span class="text-success">Available</span>
                             }
-                        </div>
+                            else
+                            {
+                                <span class="text-danger">Not available</span>
+                            }
+                        </p>
+                    </div>
+
+                    <div class="court-card-actions">
+                        <!-- Details: безопасно, просто открывает страницу корта -->
+                        <a asp-controller="Courts"
+                           asp-action="Details"
+                           asp-route-id="@court.CourtID"
+                           class="btn btn-outline-light btn-sm">
+                            Details
+                        </a>
+
+                        <!-- Book this court: фронтенд готов, бекенд потом может реализовать CourtsController.Book(int id) -->
+                        <a asp-controller="Courts"
+                           asp-action="Book"
+                           asp-route-id="@court.CourtID"
+                           class="btn btn-primary btn-sm">
+                            Book this court
+                        </a>
                     </div>
                 </div>
             </div>
         }
     </div>
 }
-
